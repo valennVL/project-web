@@ -1,11 +1,9 @@
 from fastapi import APIRouter, HTTPException, Response, Query, status
 from typing import Dict, List, Union
-from app.models.schemas import Cliente, CrearCliente
+from app.models.schemas import Cliente, CrearCliente, Orden
+from app.api.routes.bases import db_cliente, db_orden
 
 router = APIRouter(prefix="", tags=["clientes"])
-
-# Simple in-memory store
-db_cliente: Dict[int, Cliente] = {}
 
 # creacion de instacia de la clase CLIENTE
 @router.post("/cliente", response_model=Cliente, status_code=201)
@@ -20,3 +18,13 @@ def crear_cliente(payload: CrearCliente) -> Cliente:
 @router.get("/cliente", response_model=List[Cliente])
 def list_clientes() -> List[Cliente]:
     return list(db_cliente.values())
+
+# listar todos los Clientes y sus ORDENES
+@router.get("/cliente/{cliente_id}/ordenes", response_model=List[Orden])
+def get_ordenes_cliente(cliente_id: int) -> List[Orden]:
+    cliente = db_cliente.get(cliente_id)
+    if not cliente:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado en la BD")
+    if not hasattr(cliente, 'ordenes') or not cliente.ordenes:
+        return []
+    return cliente.ordenes

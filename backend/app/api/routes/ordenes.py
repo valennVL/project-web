@@ -1,12 +1,10 @@
 from fastapi import APIRouter, HTTPException, Response, Query, status
 from typing import Dict, List, Union
 from app.models.schemas import Orden, CrearOrden, UpdateOrden
-from app.api.routes.clientes import db_cliente
+from app.api.routes.bases import db_cliente
+from app.api.routes.bases import db_orden
 
 router = APIRouter(prefix="", tags=["ordenes"])
-
-# Simple in-memory store
-db_orden: Dict[int, Orden] = {}
 
 # asigna CONSECUTIVO de la entidad ORDEN
 _next_consecutivo: int = 1
@@ -32,6 +30,8 @@ def crear_orden(payload: CrearOrden) -> Orden:
         id_cliente=payload.id_cliente
     )
     db_orden[orden.consecutivo] = orden
+    cliente_existente = db_cliente[payload.id_cliente]
+    cliente_existente.ordenes.append(orden)
     return orden
 
 # encontrar ORDEN mediante su CONSECUTIVO
@@ -45,27 +45,37 @@ def get_orden(orden_consecutivo: int) -> Orden:
 # Actualizar ORDEN mediante su CONSECUTIVO
 @router.put("/orden/{orden_consecutivo}")
 def actualizar_orden(orden_consecutivo: int, orden_data: UpdateOrden):
-    for orden_id, orden in db_orden.items():
-        if orden_id == orden_consecutivo:
-            actualizar = orden_data.model_dump(exclude_unset=True)
-            if not actualizar:
-                return Response(status_code=304)
-            if 'id_cliente' in actualizar:
-                id_cliente_a_validar = actualizar['id_cliente']
-                if id_cliente_a_validar not in db_cliente:
-                    raise HTTPException(status_code=404, detail=f"El Cliente con ID '{id_cliente_a_validar}' no fue encontrado")
-            for campo, valor in actualizar.items():
-                setattr(orden, campo, valor)
-            return orden
-    raise HTTPException(status_code=404, detail="Orden no encontrada")
-
+    orden = db_orden.get(orden_consecutivo)
+    if not orden:
+        raise HTTPException(status_code=404, detail="Orden no encontrada")
+    cliente_anterior = orden.id_cliente
+    actualizar = orden_data.model_dump(exclude_unset=True)
+    if not actualizar:
+        return Response(status_code=304)
+    if 'id_cliente' in actualizar:
+        id_cliente_a_validar = actualizar['id_cliente']
+        if id_cliente_a_validar != cliente_anterior:
+            cliente_nuevo = db_cliente.get(id_cliente_a_validar)
+            if not cliente_nuevo:
+                raise HTTPException(status_code=404, detail=f"El Cliente con ID '{id_cliente_a_validar}' no fue encontrado")
+            cliente_original = db_cliente.get(cliente_anterior)
+            if cliente_original:
+                cliente_original.ordenes = [o for o in cliente_original.ordenes if o.consecutivo != orden_consecutivo]
+            orden.id_cliente = id_cliente_a_validar
+            cliente_nuevo.ordenes.append(orden)
+    for campo, valor in actualizar.items():
+        setattr(orden, campo, valor)
+    return orden
 
 # Eliminar ORDEN mediante su CONSECUTIVO
 @router.delete("/orden/{orden_consecutivo}", status_code=204)
-def eliminar_orden_con_dict(orden_consecutivo: int):
-    global db_orden
-    if orden_consecutivo in db_orden:
-        del db_orden[orden_consecutivo]
-        return None
-    else:
+def eliminar_orden(orden_consecutivo: int):
+    orden = db_orden.get(orden_consecutivo)
+    if not orden:
         raise HTTPException(status_code=404, detail="Orden no encontrada")
+    id_cliente_asociado = orden.id_cliente
+    del db_orden[orden_consecutivo]
+    cliente = db_cliente.get(id_cliente_asociado)
+    if cliente:
+        cliente.ordenes = [o for o in cliente.ordenes if o.consecutivo != orden_consecutivo]
+    return Response(status_code=204)
