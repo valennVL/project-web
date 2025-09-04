@@ -16,3 +16,99 @@ Administradores internos: personal de la empresa encargado de gestionar inventar
 ## No objetivos
 -No manejar facturación electrónica.
 -No implementar pagos en línea en esta versión.
+
+## Instalacion **uv** (fast Python packaging)
+- Windows (PowerShell):
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"
+uv --version
+```
+- macOS/Linux:
+```bash
+curl -Ls https://astral.sh/uv/install.sh | sh
+# then restart your shell or:
+source ~/.cargo/env 2>/dev/null || true
+uv --version
+```
+
+## Instrucciones para ejecutar backend_FastAPI (port 8000)
+
+```bash
+Paso 1. (dirigirse al directorio ded backend).
+cd backend
+
+Paso 2. (creacion y gestión de entorno virtual).
+uv venv .venv
+En PowerShell: .venv\Scripts\Activate
+# Para macOS/Linux:
+# source .venv/bin/activate
+
+Paso 3. Instalación de dependencias necesarias.
+uv pip install -r requirements.txt
+
+Paso 4. Ejecutar servicdor
+uv run uvicorn app.main:app --reload --port 8000
+
+Paso 5. Probar
+http://127.0.0.1:8000/docs
+```
+
+## Instrucciones para ejecutar Frontend — React (Vite, port 5173)
+```bash
+cd frontend
+npm install
+npm run dev
+# open http://localhost:5173
+```
+
+## MODELADO DE DATOS MRD
+
++-----------+        +----------------+       +------------------+       +---------------+ 
+|  Cliente  |        |     Orden      |       |   Mantenimiento  |       |    Tecnico    |
+| id PK     | 1   n  | consecutivo PK | 1   n | numero PK        | 1     | id            |
+| nombre    |------->| tipo           |------>| tipo             |------>| nombre        |
+| email     |        | id_cliente FK  |       | descripcion      |     n | especialidad  |
+| Contacto  |        +----------------+       | finalizacion     |       +---------------+
+| direccion |              1 |                | precio           |
++-----------+                |                | consecutivo FK   |
+                             |                +------------------+
+                             |
++-----------------+  n       |          +------------------+             +------------+
+|      Venta      |<---------+          |      Detalle     |             |  Articulo  |
+| numero PK       |                   n | numero_venta PK  |<------------| id         |
+| consecutivo FK  |-------------------->| id_articulo  PK  |  n        1 | nombre     |
+| fecha           | 1                   +------------------+             | precio     |
++-----------------+                                                      | Existencia |
+                                                                         +------------+
+
+## TABLA DE API
+| Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       | Notas/Validaciones |
+|-------:|----------------------|--------------------------------------------|--------------------------------------------|--------------------|
+| POST   | /clientes            | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
+| PUT    | /clientes/{id}       | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones       |
+| GET    | /clientes/{id}       | —                                          | 200, 404                                   | —                  |
+| GET    | /clientes            | q, order, offset, limit                    | 200 (lista) + `Total-Count_clientes`       | Filtros y orden    |
+| DELETE | /clientes/{id}       | —                                          | 204, 404                                   | —                  |
+|        |                      |                                            |                                            |                    |
+| POST   | /ordenes             | `{tipo...}`                                | 201 (Location), 422, 409 (conflicto)       | Regla unicidad     |
+| PUT    | /ordenes/{id}        | `{id, nombre...}`(parcial o completo)      | 200, 404, 422     			  | Validaciones       |
+| GET    | /ordenes/{id}        | —                                          | 200, 404                                   | —                  |
+| GET    | /ordenes             | q, offset, limit                           | 200 (lista) + `Total-Count_ordenes`        | Filtros y orden    |
+| DELETE | /ordenes/{id}        | —                                          | 204, 404                                   | —                  |
+|        |                      |                                            |                                            |                    |
+| POST   | /ventas              | `{...}`                                    | 201 (Location), 422, 409 (conflicto)       | Regla unicidad     |
+| GET    | /ventas/{id}         | —                                          | 200, 404                                   | —                  |
+| GET    | /ventas              | q, order, offset, limit                    | 200 (lista) + `Total-Count_ventas`         | Filtros y orden    |
+| DELETE | /ventas/{id}         | —                                          | 204, 404                                   | —                  |
+|        |                      |                                            |                                            |                    |
+| POST   | /mantenimientos      | `{tipo, Descripcion...}`                   | 201 (Location), 409 (conflicto), 422       | Regla unicidad     |
+| PUT    | /mantenimientos/{id} | `{...}` (parcial o completo)               | 200, 404, 409, 422 			  | Validaciones       |
+| GET    | /mantenimientos/{id} | —                                          | 200, 404                                   | —                  |
+| GET    | /mantenimientos      | q, order, offset, limit                    | 200 (lista) + `Total-Count_mantenimientos` | Filtros y orden    |
+| DELETE | /mantenimientos/{id} | —                                          | 204, 404                                   | —                  |
+|        |                      |                                            |                                            |                    |
+| POST   | /articulos           | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
+| PUT    | /articulos/{id}      | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones       |
+| GET    | /articulos/{id}      | —                                          | 200, 404                                   | —                  |
+| GET    | /articulos           | q, order, offset, limit                    | 200 (lista) + `Total-Count_articulos`      | Filtros y orden    |
+| DELETE | /articulos/{id}      | —                                          | 204, 404                                   | —                  |
