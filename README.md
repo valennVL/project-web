@@ -62,7 +62,7 @@ npm run dev
 ```
 
 ## MODELADO DE DATOS MRD
-
+a corregir maximo el 20250904 a las 23:59
 +-----------+        +----------------+       +------------------+       +---------------+ 
 |  Cliente  |        |     Orden      |       |   Mantenimiento  |       |    Tecnico    |
 | id PK     | 1   n  | consecutivo PK | 1   n | numero PK        | 1     | id            |
