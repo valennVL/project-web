@@ -35,10 +35,10 @@ Dado que estoy en la página de registro de inventario. Cuando intento guardar u
 **HU2:** Como administrador, quiero registrar una orden de servicio para una reparación para llevar un control de los trabajos realizados.
 Criterios de Aceptación: La orden de servicio debe incluir datos del cliente (nombre, teléfono), descripción del problema, repuestos utilizados y el costo total del servicio.
 
-Escenario 2.1: Creación de una orden de servicio completa.
+Escenario 2.1: Como administrador creación de una orden de servicio completa.
 Dado que un cliente solicita un mantenimiento. Cuando creo una nueva orden de servicio con toda la información requerida.Entonces cuando se finaliza el mantenimiento,la  orden y el servicio se guardan.
 
-**HU3:** Como vendedor, quiero registrar una venta para tener un registro de los ingresos y las actividades.
+**HU3:** Como administrador, quiero registrar una venta para tener un registro de los ingresos y las actividades.
 Criterios de Aceptación: El sistema debe permitir generar un total de la venta, guardando el detalle de los articulos que se vendieron.
 
 Escenario 3.1: Venta de un solo repuesto.
@@ -54,21 +54,34 @@ Escenario 4.1: Generación de un reporte mensual.
 Dado que quiero analizar las ventas de septiembre. Cuando filtro las ventas del 1 al 30 de septiembre. Entonces el sistema me muestra un reporte con el total de ingresos y los repuestos más vendidos del mes.
 
 
+**Could-have:**
+**HU5:** Como administrador, necesito usar credenciales para acceso seguro a la aplicación.
+Criterios de Aceptación: Una vez establecido un usuario administrador, el sistema debera exigir las credenciales y permitir acceso en caso de que éstas sean correctas.
+
+Escenario 5.1: Registro exitoso de un repuesto.
+Dado que necesito hacer alguna operación en la pagina. Cuando ingreso el dato de usuario y contraseña. Entonces el sistema me permite acceder a las diferentes funcionalidades del aplicativo.
+
+
 **Won't-have**
 
-**HU5:** Como cliente, quiero recibir notificaciones por correo o SMS sobre el estado de mi mantenimiento para estar al tanto del progreso.
+**HU6:** Como cliente, quiero recibir notificaciones por correo o SMS sobre el estado de mi mantenimiento para estar al tanto del progreso.
 Criterios de Aceptación: El sistema debe permitir el envío de mensajes automatizados a los clientes cuando el estado de su orden de servicio cambie a finalizado pero no se cuenta con el recurso de tiempo ni las herramientas tecnicas/tecnológicas para dicja tarea.
 
-Escenario 5.1: Envío de notificación de finalización.
+Escenario 6.1: Envío de notificación de finalización.
 Dado que la reparación de un cliente ha finalizado. Cuando el técnico actualiza el estado de la orden a "finalizada". Entonces el sistema envía un mensaje de texto automático al número del cliente.
 
 
-**HU6:** Como vendedor, quiero procesar pagos directamente desde la aplicación para agilizar la transacción.
+**HU7:** Como vendedor, quiero procesar pagos directamente desde la aplicación para agilizar la transacción.
 Criterios de Aceptación: La aplicación no procesará pagos, ya que se ha decidido que esta funcionalidad es muy compleja y no es prioritaria en esta fase inicial. La facturación se maneja de forma externa.
 
-Escenario 6.1: Intento de pago desde la aplicación.
+Escenario 7.1: Intento de pago desde la aplicación.
 Dado que se ha generado una venta. Cuando busco una opción para procesar el pago con tarjeta de crédito. Entonces la aplicación no muestra ninguna opción de pago y el vendedor debe procesar el pago por métodos externos.
 
+
+##Mapa de versiones:
+
+**MVP (Semana 11):** Historias Must y Should (HU1, HU2, HU3, HU4).
+**Postergado (Semana 16):** Incluye la historia Could (HU5).
 
 ## Métricas KPIs de éxito:
 
@@ -172,18 +185,52 @@ npm run dev
   +-----------------+        +------------------+        | Existencia |
                                                          +------------+
 ```
+## Reglas/Constraints
+
+|   Entidad     |      Atributo     |          Regla de Unicidad       |Regla de Obligatoriedad|                   Reglas de Rango/Validación               |
+|--------------:|-------------------|----------------------------------|-----------------------|------------------------------------------------------------|
+|Cliente        |Id                 |Clave Primaria (PK), única        |Obligatoria            |Debe ser un entero positivo y >= 100000                     |
+|               |Nombre             |Opcional                          |Obligatoria            |No debe ser solo espacios                                   |
+|               |Email              |Única                             |Opcional               |Formato de email válido                                     |
+|               |Telefono           |Única                             |Obligatoria            |Debe ser un entero positivo entre 3000000000 y 39999999999  |
+|               |Direccion          |Opcional                          |Opcional               |Ninguna                                                     |
+|Orden          |Consecutivo        |Clave Primaria (PK), única        |Obligatoria            |Valores enteros positivos                                   |
+|               |Tipo               |Opcional                          |Obligatoria            |"Solo ""V"" (venta) o ""M"" (mantenimiento)"                |
+|               |Id_Cliente         |Opcional                          |Obligatoria            |Debe existir en la tabla db_cliente                         |
+|Venta          |Numero             |Clave Primaria (PK), única        |Obligatoria            |Valores enteros positivos                                   |
+|               |Fecha              |Opcional                          |Obligatoria            |Fecha y hora válidas                                        |
+|               |Consecutivo_Orden  |Única                             |Obligatoria            |Debe existir en la tabla db_orden                           |
+|Mantenimiento  |Numero             |Clave Primaria (PK), única        |Obligatoria            |Valores enteros positivos                                   |
+|               |Tipo               |Opcional                          |Obligatoria            |"Solo ""C"" (correctivo) o ""P"" (preventivo)"              |
+|               |Descripcion        |Opcional                          |Obligatoria            |Ninguna                                                     |
+|               |Fecha              |Opcional                          |Obligatoria            |Fecha y hora válidas                                        |
+|               |Finalizacion       |Opcional                          |Opcional               |Debe ser igual o posterior a la Fecha(de creacion)          |
+|               |Precio             |Opcional                          |Obligatoria            |Valor double no negativo                                    |
+|               |Consecutivo_Orden  |Única                             |Obligatoria            |Debe existir en la tabla db_orden                           |
+|Tecnico        |Id                 |Clave Primaria (PK), única        |Obligatoria            |Valores enteros positivos                                   |
+|               |Nombre             |Opcional                          |Obligatoria            |No debe ser solo espacios                                   |
+|               |Especialidad       |Opcional                          |Obligatoria            |No debe ser solo espacios                                   |
+|Articulo       |Id                 |Clave Primaria (PK), única        |Obligatoria            |Valores enteros positivos                                   |
+|               |Nombre             |Opcional                          |Obligatoria            |No debe ser solo espacios                                   |
+|               |Precio             |Opcional                          |Obligatoria            |Valor double no negativo                                    |
+|               |Existencia         |Opcional                          |Obligatoria            |Solo true o false                                           |
+Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligatoria            |Debe existir en la tabla db_venta                           |
+|               |Id_Articulo        |Parte de la Clave Compuesta       |Obligatoria            |Debe existir en la tabla db_articulos                       |
+|               |Clave Compuesta    |Numero_Venta + Id_Articulo, única |Obligatoria            |Ninguna                                                     |
+
+
 
 ## TABLA DE API
 | Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       | Notas/Validaciones |
 |-------:|----------------------|--------------------------------------------|--------------------------------------------|--------------------|
 | POST   | /clientes            | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
-| PUT    | /clientes/{id}       | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones       |
+| PUT    | /clientes/{id}       | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones  |                    |
 | GET    | /clientes/{id}       | —                                          | 200, 404                                   | —                  |
 | GET    | /clientes            | q, order, offset, limit                    | 200 (lista) + `Total-Count_clientes`       | Filtros y orden    |
 | DELETE | /clientes/{id}       | —                                          | 204, 404                                   | —                  |
 |        |                      |                                            |                                            |                    |
 | POST   | /ordenes             | `{tipo...}`                                | 201 (Location), 422, 409 (conflicto)       | Regla unicidad     |
-| PUT    | /ordenes/{id}        | `{id, nombre...}`(parcial o completo)      | 200, 404, 422     			  | Validaciones       |
+| PUT    | /ordenes/{id}        | `{id, nombre...}`(parcial o completo)      | 200, 404, 422     			                    | Validaciones       |
 | GET    | /ordenes/{id}        | —                                          | 200, 404                                   | —                  |
 | GET    | /ordenes             | q, offset, limit                           | 200 (lista) + `Total-Count_ordenes`        | Filtros y orden    |
 | DELETE | /ordenes/{id}        | —                                          | 204, 404                                   | —                  |
@@ -194,13 +241,13 @@ npm run dev
 | DELETE | /ventas/{id}         | —                                          | 204, 404                                   | —                  |
 |        |                      |                                            |                                            |                    |
 | POST   | /mantenimientos      | `{tipo, Descripcion...}`                   | 201 (Location), 409 (conflicto), 422       | Regla unicidad     |
-| PUT    | /mantenimientos/{id} | `{...}` (parcial o completo)               | 200, 404, 409, 422 			  | Validaciones       |
+| PUT    | /mantenimientos/{id} | `{...}` (parcial o completo)               | 200, 404, 409, 422 			                  | Validaciones       |
 | GET    | /mantenimientos/{id} | —                                          | 200, 404                                   | —                  |
 | GET    | /mantenimientos      | q, order, offset, limit                    | 200 (lista) + `Total-Count_mantenimientos` | Filtros y orden    |
 | DELETE | /mantenimientos/{id} | —                                          | 204, 404                                   | —                  |
 |        |                      |                                            |                                            |                    |
 | POST   | /articulos           | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
-| PUT    | /articulos/{id}      | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones       |
+| PUT    | /articulos/{id}      | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			                  | Validaciones       |
 | GET    | /articulos/{id}      | —                                          | 200, 404                                   | —                  |
 | GET    | /articulos           | q, order, offset, limit                    | 200 (lista) + `Total-Count_articulos`      | Filtros y orden    |
 | DELETE | /articulos/{id}      | —                                          | 204, 404                                   | —                  |
