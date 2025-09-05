@@ -251,3 +251,23 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 | GET    | /articulos/{id}      | —                                                | 200, 404                                   | Error 404 si el {id} no existe en db_articulo                                                             |
 | GET    | /articulos           | q, order, offset, limit                          | 200 (lista) + `Total-Count_articulos`      | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
 | DELETE | /articulos/{id}      | —                                                | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
+
+## Ejemplos JSON
+    
+      ```
+      # Ejemplo consulta entidad Orden:
+     GET /orden/1
+     200 OK
+     [
+       { "consecutivo": 1, "tipo": "M", "id_cliente": "2025-08-21T10:00:00Z" }
+     ]
+     ```
+     
+     # Ejemplo de consulta en entidad Mantenimiento (pendiente implementaciión)
+     GET /items?q=...&sort=created_at&order=desc&offset=0&limit=10
+     200 OK
+     X-Total-Count: 42
+     [
+       { "id": 1, "name": "Foo", "created_at": "2025-08-21T10:00:00Z" }
+     ]
+     ```
