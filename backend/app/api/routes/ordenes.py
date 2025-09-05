@@ -15,7 +15,7 @@ def _get_next_consecutivo() -> int:
     return nid
 
 # creacion de instancia de la clase ORDEN
-@router.post("/orden", response_model=Orden, status_code=201)
+@router.post("/ordenes", response_model=Orden, status_code=201)
 def crear_orden(payload: CrearOrden) -> Orden:
     # Validamos existecia del CLIENTE
     if payload.id_cliente not in db_cliente:
@@ -35,7 +35,7 @@ def crear_orden(payload: CrearOrden) -> Orden:
     return orden
 
 # encontrar ORDEN mediante su CONSECUTIVO
-@router.get("/orden/{orden_consecutivo}", response_model=Orden)
+@router.get("/ordenes/{orden_consecutivo}", response_model=Orden)
 def get_orden(orden_consecutivo: int) -> Orden:
     orden = db_orden.get(orden_consecutivo)
     if not orden:
@@ -43,7 +43,7 @@ def get_orden(orden_consecutivo: int) -> Orden:
     return orden
 
 # Actualizar ORDEN mediante su CONSECUTIVO
-@router.put("/orden/{orden_consecutivo}")
+@router.put("/ordenes/{orden_consecutivo}")
 def actualizar_orden(orden_consecutivo: int, orden_data: UpdateOrden):
     orden = db_orden.get(orden_consecutivo)
     if not orden:
@@ -68,7 +68,7 @@ def actualizar_orden(orden_consecutivo: int, orden_data: UpdateOrden):
     return orden
 
 # Eliminar ORDEN mediante su CONSECUTIVO
-@router.delete("/orden/{orden_consecutivo}", status_code=204)
+@router.delete("/ordenes/{orden_consecutivo}", status_code=204)
 def eliminar_orden(orden_consecutivo: int):
     orden = db_orden.get(orden_consecutivo)
     if not orden:
