@@ -62,24 +62,34 @@ npm run dev
 ```
 
 ## MODELADO DE DATOS MRD
-a corregir maximo el 20250904 a las 23:59
-+-----------+        +----------------+       +------------------+       +---------------+ 
-|  Cliente  |        |     Orden      |       |   Mantenimiento  |       |    Tecnico    |
-| id PK     | 1   n  | consecutivo PK | 1   n | numero PK        | 1     | id            |
-| nombre    |------->| tipo           |------>| tipo             |------>| nombre        |
-| email     |        | id_cliente FK  |       | descripcion      |     n | especialidad  |
-| Contacto  |        +----------------+       | finalizacion     |       +---------------+
-| direccion |              1 |                | precio           |
-+-----------+                |                | consecutivo FK   |
-                             |                +------------------+
-                             |
-+-----------------+  n       |          +------------------+             +------------+
-|      Venta      |<---------+          |      Detalle     |             |  Articulo  |
-| numero PK       |                   n | numero_venta PK  |<------------| id         |
-| consecutivo FK  |-------------------->| id_articulo  PK  |  n        1 | nombre     |
-| fecha           | 1                   +------------------+             | precio     |
-+-----------------+                                                      | Existencia |
-                                                                         +------------+
+
+  +----------------+             +-----------+
+  |     Orden      |             |  Cliente  |
+  | consecutivo PK |  n        1 | id PK     |
+  | tipo           |<------------| nombre    |
+  | id_cliente FK  |             | email     |
+  +----------------+             | Contacto  |
+      1 |       | 1              | direccion |
+        |       |                +-----------+
+        |       | 
+        |       |                +------------------+
+        |       |                |   Mantenimiento  |       +---------------+
+        |       |                | numero PK        |       |    Tecnico    |
+        |       |             n  | tipo             | 1     | id            |
+        |       | -------------->| descripcion      |------>| nombre        |
+        |                        | finalizacion     |     n | especialidad  |
+        |                        | precio           |       +---------------+
+        |                        | consecutivo FK   |
+        |                        +------------------+
+        |  n
+         >
+  +-----------------+                                    +------------+
+  |      Venta      |        +------------------+        |  Articulo  |
+  | numero PK       | 1    n |      Detalle     |      n | id         |
+  | consecutivo FK  |------->| numero_venta PK  |<-------| nombre     |
+  | fecha           |        | id_articulo  PK  |1       | precio     |
+  +-----------------+        +------------------+        | Existencia |
+                                                         +------------+
 
 ## TABLA DE API
 | Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       | Notas/Validaciones |
