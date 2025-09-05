@@ -253,21 +253,54 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 | DELETE | /articulos/{id}      | —                                                | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
 
 ## Ejemplos JSON
-    
-      ```
-      # Ejemplo consulta entidad Orden:
-     GET /orden/1
-     200 OK
-     [
-       { "consecutivo": 1, "tipo": "M", "id_cliente": "2025-08-21T10:00:00Z" }
-     ]
-     ```
-     
-     # Ejemplo de consulta en entidad Mantenimiento (pendiente implementaciión)
-     GET /items?q=...&sort=created_at&order=desc&offset=0&limit=10
-     200 OK
-     X-Total-Count: 42
-     [
-       { "id": 1, "name": "Foo", "created_at": "2025-08-21T10:00:00Z" }
-     ]
-     ```
+```
+# creación de una instancia Cliente
+POST /cliente
+200 OK
+X-Total-Count: 42
+[
+  { "id": 100100100,
+    "nombre": "Pepito Perez",
+	  "email": "pepitoperez2000@mail.com",
+	  "contacto": 3012223344,
+	  "direccion": "Av. Colombia 1432"
+  }
+]
+
+# consulta y modificación Cliente por id
+# PUT /cliente/100100100
+GET /cliente/100100100
+200 OK
+ [
+   { "id": 100100100,
+     "nombre": "Pepito Perez",
+	   "email": "pepitoperez2000@mail.com",
+	   "contacto": 3012223344,
+	   "direccion": "Av. Colombia 1432"
+   }
+ ]
+
+# consulta con criterios y ordenamiento
+GET /mantenimiento?q=C&sort=tipo&order=asc&offset=0&limit=5
+200 OK
+X-Total-Count: 20
+[
+  { "numero;" 12",
+    "tipo": "C",
+    "descripcion": "Se cambió el cuchuflí del coso del aire",
+    "fecha": '2025-09-01T15:30:00',
+    "finalizacion": '2025-09-01T16:15:00',
+    "precio": 225000.0
+    "consecutivo_orden": 55   
+  },
+  {
+    "numero;" 12",
+    "tipo": "P",
+    "descripcion": "Engrase de poleas set aire",
+    "fecha": '2025-09-01T16:15:00',
+    "finalizacion": '2025-09-01T17:00:00',
+    "precio": 110000.0
+    "consecutivo_orden": 55   
+  }
+]
+```
