@@ -251,11 +251,40 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 | GET    | /articulos/{id}      | —                                                | 200, 404                                   | Error 404 si el {id} no existe en db_articulo                                                             |
 | GET    | /articulos           | q, order, offset, limit                          | 200 (lista) + `Total-Count_articulos`      | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
 | DELETE | /articulos/{id}      | —                                                | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
+## Convenciones
+El endpoint base para acceder a la lista de ordenes es /ordenes.
+	Paginación: Para manejar grandes listas de datos, usamos los parámetros offset y limit.
+		offset: Indica el número de elementos que se deben omitir desde el inicio de la lista.
+		limit: Define la cantidad máxima de elementos a devolver en una sola respuesta.
+	Ordenamiento: Los parámetros sort y order se utilizan para ordenar la lista de resultados.
+		sort: Especifica el campo por el cual se ordenarán los datos (por ejemplo, created_at, price, name).
+		order: Determina la dirección del orden, que puede ser asc (ascendente) o desc (descendente).
+	Filtros: Los filtros se aplican a través de parámetros de consulta (query parameters).
+		q: Se usa para realizar una búsqueda de texto completo en campos como el nombre o la descripción.
+		category: Permite filtrar los productos por una categoría específica.
+		min_price y max_price: Sirven para filtrar productos dentro de un rango de precios.
+
+	Ejemplo de la consulta:
+		GET /ordenes?V=P&order=asc&offset=0&limit=20
+	Esta solicitud pide:
+		Ordenes de Venta "V" (valor entregado a q es V) en su atributo de tipo(de orden).
+		Ordenados por precio de menor a mayor (order=desc).
+		Saltando los primeros 0 resultados (offset=0).
+		Devolviendo un máximo de 20 ventas (limit=20).
+
+	Respuesta Esperada
+		Códigos de estado: La respuesta del servidor debe incluir un código de estado HTTP para indicar el resultado de la operación.
+		200 OK: La solicitud se procesó correctamente y se devuelven los datos.
+		404 Not Found: El recurso solicitado no existe.
+		422 Bad Request: La solicitud contiene parámetros inválidos o incorrectos.
+		Encabezados (Headers): Es una convención común incluir un encabezado como X-Total-ordenes para informar al usuario el número total de registros de ordenes, sin importar la paginación.
+X-Total-ordenes: 133
+Cuerpo de la Respuesta (Body): El cuerpo de la respuesta es una matriz de objetos JSON, donde cada objeto representa una orden.
 
 ## Ejemplos JSON
 ```
 # creación de una instancia Cliente
-POST /cliente
+POST /clientes
 200 OK
 X-Total-Count: 1
 [
@@ -268,8 +297,8 @@ X-Total-Count: 1
 ]
 
 # consulta y modificación Cliente por id
-# PUT /cliente/100100100
-GET /cliente/100100100
+# PUT /clientes/100100100
+GET /clientes/100100100
 200 OK
  [
    { "id": 100100100,
@@ -281,7 +310,7 @@ GET /cliente/100100100
  ]
 
 # consulta con criterios y ordenamiento
-GET /mantenimiento?q=C&sort=tipo&order=asc&offset=0&limit=5
+GET /mantenimientos?q=C&sort=tipo&order=asc&offset=0&limit=5
 200 OK
 X-Total-Count: 20
 [
