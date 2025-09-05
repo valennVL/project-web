@@ -133,8 +133,11 @@ El uso de FastAPI en el backend se refleja en proyecto por brindar velocidad y f
 
 
 -FastAPI: Para la creación de endpoints de la API que manejan la lógica de negocio para los clientes, órdenes, mantenimientos, ventas, tecnicos y articulos.
+
 -Pydantic: De gran ayuda sobretodo con el tipado, para la validación de datos y la serialización.
+
 -APIRouter: Permite organizar la API en módulos lógicos, como clientes.py y ordenes.py, etc, para un códifo más manejable y escalable.
+
 -BaseModel: Usado para definir estructura de los datos que se esperan en las solicitudes (CrearCliente, CrearOrden) y las respuestas (Cliente, Orden), etc, asegurando que los datos sean válidos y consistentes.
 
 **Frontend :**
@@ -142,11 +145,17 @@ Construido en React, una popular biblioteca de JavaScript para crear interfaces 
 
 
 -React: Se usa para crear la interfaz de usuario con componentes reutilizables, como Clientes y Ordenes, que gestionan su propio estado.
+
 -Componentes Funcionales (function ...): Permiten crear componentes de manera simple.
+
 -Hooks (useState, useEffect): Los hooks son cruciales para el manejo del estado y los efectos secundarios en los componentes.
+
 -useState: Para gestionar el estado de los componentes, como los datos del formulario (form), los resultados de la búsqueda (q), y la información de la orden (orden).
+
 -useEffect: Se usa para ejecutar efectos secundarios, como cargar datos del servidor al inicio del componente (useEffect(()=>{ load() },[]) en Clientes.jsx), asegurando que la información esté actualizada cuando el componente se renderiza.
+
 -Vite: El archivo main.jsx sugiere que el proyecto fue creado con Vite, una herramienta de desarrollo que se usa para iniciar proyectos de React de manera rápida, proporcionando un entorno de desarrollo veloz.
+
 -Fetch API: Se usa para interactuar con el backend. La función fetch() en api.js permite realizar solicitudes HTTP (POST, GET, PUT, DELETE) para crear, leer, actualizar y eliminar datos de la API de FastAPI.
 
 
@@ -167,6 +176,44 @@ Estados locales con useState: El método más básico y fundamental que explica 
 	201 Created: Respuesta tras crear un nuevo recurso. Lo usaremos para la creación de una nueva orden POST de Orden o un nuevo Cliente.
 	204 No Content: Estado mostrado tras operaciones DELETE exitosa, indicando que la acción se completó con éxito. NO devuelve contenido de la entidad eliminada.
 
+## Diagrama SPA
+```
++----------------+       +----------------+       +-------------------+       +-----------------+
+|   Usuario      |       |    Navegador     |       | Servidor Frontend |     | Servidor Backend|
+| (Dispositivo)  |       |  (SPA en React)  |       |     (Nginx)       |     |   (FastAPI)     |
++----------------+       +----------------+       +-------------------+       +-----------------+
+        |                        |                        |                       |
+        |  Petición de Carga     |                        |                       |
+        |  del SPA (GET /)       |                        |                       |
+        +----------------------->|                        |                       |
+        |                        |  Petición de Carga del |                       |
+        |                        |    SPA (GET /)         |                       |
+        |                        +----------------------->|                       |
+        |                        |                        |                       |
+        |                        |                        |  Servir archivos      |
+        |                        |                        |    estáticos          |
+        |                        |                        | (HTML, JS, CSS)       |
+        |                        |                        +---------------------->|
+        |                        |                        |                       |
+        |   SPA Cargado en el    |                        |                       |
+        |       Navegador        |                        |                       |
+        |<-----------------------+                        |                       |
+        |                        |                        |                       |
+        |                        |  Petición de API       |                       |
+        |                        |  (Ej: POST /login)     |                       |
+        |                        +----------------------------------------------->|
+        |                        |                        |                       |  Procesar solicitud,
+        |                        |                        |                       |  acceder a la base de
+        |                        |                        |                       |  datos, etc.
+        |                        |                        |                       |<------------------+
+        |                        |                        |                       |  Respuesta JSON   |
+        |                        |<-------------------------------------------+-----------------------+
+        |                        |                        |                   |
+        |                        |  Respuesta JSON        |                   |
+        |<--------------------------------------------------------------------+
+        |                        |                        |                   |
+        +------------------------+------------------------+-------------------+
+```
 
 ## Instrucciones para ejecutar backend_FastAPI (port 8000)
 
@@ -295,13 +342,17 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 | GET    | /articulos           | q, order, offset, limit                          | 200 (lista) + `Total-Count_articulos`      | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
 | DELETE | /articulos/{id}      | —                                                | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
 ## Convenciones
+
 El endpoint base para acceder a la lista de ordenes es /ordenes.
+
 	Paginación: Para manejar grandes listas de datos, usamos los parámetros offset y limit.
 		offset: Indica el número de elementos que se deben omitir desde el inicio de la lista.
 		limit: Define la cantidad máxima de elementos a devolver en una sola respuesta.
+  
 	Ordenamiento: Los parámetros sort y order se utilizan para ordenar la lista de resultados.
 		sort: Especifica el campo por el cual se ordenarán los datos (por ejemplo, created_at, price, name).
 		order: Determina la dirección del orden, que puede ser asc (ascendente) o desc (descendente).
+  
 	Filtros: Los filtros se aplican a través de parámetros de consulta (query parameters).
 		q: Se usa para realizar una búsqueda de texto completo en campos como el nombre o la descripción.
 		category: Permite filtrar los productos por una categoría específica.
