@@ -1,7 +1,7 @@
 # project-web
 Web application for Radiadores Alejo, designed to manage inventory, sales, and maintenance services. The system supports product registration, tracking of spare parts (radiators, compressors, valves, hoses, condensers), and monitoring of repair and air conditioning maintenance services.
 ## Elevator pitch
-Radiadores Alejo enfrenta dificultades en el control de inventarios y servicios de mantenimiento. Este proyecto desarrolla una aplicación web que permitirá gestionar repuestos, ventas y reparaciones de radiadores y aires acondicionados. La solución está orientada a optimizar la administración, reducir pérdidas y mejorar la trazabilidad del negocio.
+  Radiadores Alejo enfrenta dificultades en el control de inventarios y servicios de mantenimiento. Este proyecto desarrolla una aplicación web que permitirá gestionar repuestos, ventas y reparaciones de radiadores y aires acondicionados. La solución está orientada a optimizar la administración, reducir pérdidas y mejorar la trazabilidad del negocio.
 ## Usuarios y segmentos
 Administradores internos: personal de la empresa encargado de gestionar inventario, registrar ventas, controlar repuestos y dar seguimiento a los mantenimientos.
 ## Casos de uso principales
@@ -16,6 +16,87 @@ Administradores internos: personal de la empresa encargado de gestionar inventar
 ## No objetivos
 -No manejar facturación electrónica.
 -No implementar pagos en línea en esta versión.
+
+
+## Historias de usuario y alcance (MVP)
+A continuación se propone algunas historias de usuario y se estima su importancia.
+
+**Must-have:**
+
+**HU1:** Como administrador, quiero registrar nuevos repuestos en el inventario para mantener el catálogo actualizado.
+Criterios de Aceptación: El sistema debe permitir ingresar el nombre del repuesto, una descripción, el precio de venta.
+
+Escenario 1.1: Registro exitoso de un repuesto.
+Dado que estoy en la página de registro de inventario. Cuando ingreso todos los datos válidos para un repuesto. Entonces el repuesto se guarda correctamente.
+
+Escenario 1.2: Intento de registro sin campos obligatorios.
+Dado que estoy en la página de registro de inventario. Cuando intento guardar un repuesto sin ingresar el nombre o la cantidad. Entonces el sistema muestra un mensaje de error indicando los campos faltantes.
+
+**HU2:** Como administrador, quiero registrar una orden de servicio para una reparación para llevar un control de los trabajos realizados.
+Criterios de Aceptación: La orden de servicio debe incluir datos del cliente (nombre, teléfono), descripción del problema, repuestos utilizados y el costo total del servicio.
+
+Escenario 2.1: Creación de una orden de servicio completa.
+Dado que un cliente solicita un mantenimiento. Cuando creo una nueva orden de servicio con toda la información requerida.Entonces cuando se finaliza el mantenimiento,la  orden y el servicio se guardan.
+
+**HU3:** Como vendedor, quiero registrar una venta para tener un registro de los ingresos y las actividades.
+Criterios de Aceptación: El sistema debe permitir generar un total de la venta, guardando el detalle de los articulos que se vendieron.
+
+Escenario 3.1: Venta de un solo repuesto.
+Dado que un cliente compra un repuesto. Cuando registro la venta del repuesto en el sistema. Entonces se genera la factura, se cierra la venta y se guarda la orden.
+
+
+**Should-have:**
+
+**HU4:** Como administrador, quiero generar reportes de ventas mensuales para analizar el desempeño del negocio.
+Criterios de Aceptación: El sistema debe permitir filtrar las ventas por rango de fechas y generar un reporte que incluya la cantidad de ventas, los ingresos totales y los repuestos más vendidos en ese período.
+
+Escenario 4.1: Generación de un reporte mensual.
+Dado que quiero analizar las ventas de septiembre. Cuando filtro las ventas del 1 al 30 de septiembre. Entonces el sistema me muestra un reporte con el total de ingresos y los repuestos más vendidos del mes.
+
+
+**Won't-have**
+
+**HU5:** Como cliente, quiero recibir notificaciones por correo o SMS sobre el estado de mi mantenimiento para estar al tanto del progreso.
+Criterios de Aceptación: El sistema debe permitir el envío de mensajes automatizados a los clientes cuando el estado de su orden de servicio cambie a finalizado pero no se cuenta con el recurso de tiempo ni las herramientas tecnicas/tecnológicas para dicja tarea.
+
+Escenario 5.1: Envío de notificación de finalización.
+Dado que la reparación de un cliente ha finalizado. Cuando el técnico actualiza el estado de la orden a "finalizada". Entonces el sistema envía un mensaje de texto automático al número del cliente.
+
+
+**HU6:** Como vendedor, quiero procesar pagos directamente desde la aplicación para agilizar la transacción.
+Criterios de Aceptación: La aplicación no procesará pagos, ya que se ha decidido que esta funcionalidad es muy compleja y no es prioritaria en esta fase inicial. La facturación se maneja de forma externa.
+
+Escenario 6.1: Intento de pago desde la aplicación.
+Dado que se ha generado una venta. Cuando busco una opción para procesar el pago con tarjeta de crédito. Entonces la aplicación no muestra ninguna opción de pago y el vendedor debe procesar el pago por métodos externos.
+
+
+## Métricas KPIs de éxito:
+
+Para confiar en los resultados del desarrollo de éste proyecto, se valorará las siguientes métricas:
+
+Rendimiento del backend (FastAPI):
+- Tiempo de respuesta de la API: El 95% de las solicitudes a los endpoints clave (por ejemplo /items, /ordenes, /ventas y /mantenimientso) deben completarse en menos de 200 ms.
+- Tasa de éxito de la API: La tasa de solicitudes exitosas (códigos de estado 200 y 201) debe ser superior al 98%.
+
+Rendimiento del frontend (React):
+- Tiempo de carga inicial: La página principal debe carga y muestra su contenido principal en menos de 1s segundo.
+- Tiempo de carga de la lista de ítems: La lista de ítems y/o ordenes y/o mantenimientos debe renderizarse en la interfaz de usuario en menos de 500 ms después de que la respuesta de la API.
+
+Usabilidad:
+- Tasa de éxito en cada uso: El 100% de los usuarios deben ser capaces de crear, actualizar y eliminar un ítem sin errores funcionales en un flujo de trabajo típico.
+- Errores del usuario: El número de errores al interactuar con los diferentes formularios de creación de ítems y otras opciones, debe ser mínimo y completarse en menos de 300 ms.
+
+## Variables de entorno y puerto
+Variables de entorno y puertos
+La configuración de variables de entorno es de suma importancia para la gestión de la configuración entre diferentes ambientes (desarrollo, producción).
+
+###Variables de Entorno:
+- Frontend (.env.development): VITE_API_URL=http://127.0.0.1:8000 para que el frontend sepa la URL a la que le debe hacer sus peticiones a la API.
+- Backend (.env o configuración del servidor): CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173 crea la lista las URLs del frontend que están permitidas para hacer peticiones.
+
+###Puertos:
+- Backend (FastAPI): Puerto 8000.
+- Frontend (React/Vite): Puerto 5173.
 
 ## Instalacion **uv** (fast Python packaging)
 - Windows (PowerShell):
