@@ -124,6 +124,24 @@ curl -Ls https://astral.sh/uv/install.sh | sh
 source ~/.cargo/env 2>/dev/null || true
 uv --version
 ```
+## Librerias Clave usadas
+
+**Backend (Python)**
+El uso de FastAPI en el backend se refleja en proyecto por brindar velocidad y facilidad de uso.
+-FastAPI: Para la creación de endpoints de la API que manejan la lógica de negocio para los clientes, órdenes, mantenimientos, ventas, tecnicos y articulos.
+-APIRouter: Permite organizar la API en módulos lógicos, como clientes.py y ordenes.py, etc, para un códifo más manejable y escalable.
+-BaseModel: Usado para definir estructura de los datos que se esperan en las solicitudes (CrearCliente, CrearOrden) y las respuestas (Cliente, Orden), etc, asegurando que los datos sean válidos y consistentes.
+
+**Frontend :**
+Construido en React, una popular biblioteca de JavaScript para crear interfaces de usuario interactivas.
+-React: Se usa para crear la interfaz de usuario con componentes reutilizables, como Clientes y Ordenes, que gestionan su propio estado.
+-Componentes Funcionales (function ...): Permiten crear componentes de manera simple.
+-Hooks (useState, useEffect): Los hooks son cruciales para el manejo del estado y los efectos secundarios en los componentes.
+-useState: Para gestionar el estado de los componentes, como los datos del formulario (form), los resultados de la búsqueda (q), y la información de la orden (orden).
+-useEffect: Se usa para ejecutar efectos secundarios, como cargar datos del servidor al inicio del componente (useEffect(()=>{ load() },[]) en Clientes.jsx), asegurando que la información esté actualizada cuando el componente se renderiza.
+-Vite: El archivo main.jsx sugiere que el proyecto fue creado con Vite, una herramienta de desarrollo que se usa para iniciar proyectos de React de manera rápida, proporcionando un entorno de desarrollo veloz.
+-Fetch API: Se usa para interactuar con el backend. La función fetch() en api.js permite realizar solicitudes HTTP (POST, GET, PUT, DELETE) para crear, leer, actualizar y eliminar datos de la API de FastAPI.
+
 
 ## Instrucciones para ejecutar backend_FastAPI (port 8000)
 
@@ -264,7 +282,7 @@ El endpoint base para acceder a la lista de ordenes es /ordenes.
 		category: Permite filtrar los productos por una categoría específica.
 		min_price y max_price: Sirven para filtrar productos dentro de un rango de precios.
 
-	Ejemplo de la consulta:
+ Ejemplo de la consulta:
 		GET /ordenes?V=P&order=asc&offset=0&limit=20
 	Esta solicitud pide:
 		Ordenes de Venta "V" (valor entregado a q es V) en su atributo de tipo(de orden).
