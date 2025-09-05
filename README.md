@@ -222,64 +222,32 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 
 ## TABLA DE API
 
-| Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       |                                       Notas/Validaciones                                                  |
-|-------:|----------------------|--------------------------------------------|--------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| POST   | /clientes            | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Campos unicos: id  y nombre. El servidor devolverá un error 409 si nombre o id ya existe                  |
-| PUT    | /clientes/{id}       | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Revisión de tipo para los atributos a cambiar. Si falla, se devuelve un error 402                                         |
-| GET    | /clientes/{id}       | —                                          | 200, 404                                   | Error 404 si el {id} no existe en db_clientes                                                             |
-| GET    | /clientes            | q, order, offset, limit                    | 200 (lista) + `Total-Count_clientes`       | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
-| DELETE | /clientes/{id}       | —                                          | 204, 404                                   | Si no tiene ordenes se elimina un Cliente que en futuros GETs retorna status 404                          |
-|        |                      |                                            |                                            |                                                                                                           |
-| POST   | /ordenes             | `{tipo...}`                                | 201 (Location), 422, 409 (conflicto)       | Unicidad. Requiere id_cliente en bd_cliente. Retorna 404 cuando un id_cliente no existe                   |
-| PUT    | /ordenes/{id}        | `{id, nombre...}`(parcial o completo)      | 200, 404, 422     			  | Requiere id_cedula existente en bd_cliente. Se devuelve un error 404 si no existe                                           |
-| GET    | /ordenes/{id}        | —                                          | 200, 404                                   | Error 404 si el {consecutivo_orden} no existe en db_orden                                                 |
-| GET    | /ordenes             | q, offset, limit                           | 200 (lista) + `Total-Count_ordenes`        | Filtros por q: (búsqueda por tipo), order(asc|desc), y paginación con offset y limit                      |
-| DELETE | /ordenes/{id}        | —                                          | 204, 404                                   | Solo se puede eliminar si el mantenimiento/venta está cerrado. Error 404 si no existe                     |
-|        |                      |                                            |                                            |                                                                                                           |
-| POST   | /ventas              | `{...}`                                    | 201 (Location), 422, 409 (conflicto)       | Unicidad. Requiere consecutivo en bd_orden. Retorna 404 cuando un si no existe en orden                   |
-| GET    | /ventas/{id}         | —                                          | 200, 404                                   | Requiere id_cedula existente en bd_venta. Se devuelve un error 404 si no existe                           |
-| GET    | /ventas              | q, order, offset, limit                    | 200 (lista) + `Total-Count_ventas`         | Filtros por q (búsqueda por articulo), order(asc|desc), y paginación con offset y limit                   |
-|        |                      |                                            |                                            |                                                                                                           |
-| POST   | /mantenimientos      | `{tipo, Descripcion...}`                   | 201 (Location), 409 (conflicto), 422       | Unicidad. Requiere consecutivo_orden en bd_orden. Retorna 404 cuando un consecutivo no existe             |
-| PUT    | /mantenimientos/{id} | `{...}` (parcial o completo)               | 200, 404, 422 		         	  | Revisión de tipo para los atributos a cambiar y existencia de tecnico. Si falla, se devuelve un error 402 |
-| GET    | /mantenimientos/{id} | —                                          | 200, 404                                   | Error 404 si el {numero} no existe en db_venta                                                            |
-| GET    | /mantenimientos      | q, order, offset, limit                    | 200 (lista) + `Total-Count_mantenimientos` | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
-| DELETE | /mantenimientos/{id} | —                                          | 204, 404                                   | Solo se puede eliminar si el mantenimiento está cerrado. Error 404 si no existe                           |
-|        |                      |                                            |                                            |                                                                                                           |
-| POST   | /articulos           | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Unicidad: id                                                                                              |
-| PUT    | /articulos/{id}      | `{id, nombre...}`(parcial o completo)      | 200, 404, 422 		         	  | Revisión de tipo para los atributos a cambiar. Si falla, se devuelve un error 402                                       |
-| GET    | /articulos/{id}      | —                                          | 200, 404                                   | Error 404 si el {id} no existe en db_articulo                                                             |
-| GET    | /articulos           | q, order, offset, limit                    | 200 (lista) + `Total-Count_articulos`      | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
-| DELETE | /articulos/{id}      | —                                          | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
-
-
-| Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       | Notas/Validaciones |
-|-------:|----------------------|--------------------------------------------|--------------------------------------------|--------------------|
-| POST   | /clientes            | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
-| PUT    | /clientes/{id}       | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			  | Validaciones  |                    |
-| GET    | /clientes/{id}       | —                                          | 200, 404                                   | —                  |
-| GET    | /clientes            | q, order, offset, limit                    | 200 (lista) + `Total-Count_clientes`       | Filtros y orden    |
-| DELETE | /clientes/{id}       | —                                          | 204, 404                                   | —                  |
-|        |                      |                                            |                                            |                    |
-| POST   | /ordenes             | `{tipo...}`                                | 201 (Location), 422, 409 (conflicto)       | Regla unicidad     |
-| PUT    | /ordenes/{id}        | `{id, nombre...}`(parcial o completo)      | 200, 404, 422     			                    | Validaciones       |
-| GET    | /ordenes/{id}        | —                                          | 200, 404                                   | —                  |
-| GET    | /ordenes             | q, offset, limit                           | 200 (lista) + `Total-Count_ordenes`        | Filtros y orden    |
-| DELETE | /ordenes/{id}        | —                                          | 204, 404                                   | —                  |
-|        |                      |                                            |                                            |                    |
-| POST   | /ventas              | `{...}`                                    | 201 (Location), 422, 409 (conflicto)       | Regla unicidad     |
-| GET    | /ventas/{id}         | —                                          | 200, 404                                   | —                  |
-| GET    | /ventas              | q, order, offset, limit                    | 200 (lista) + `Total-Count_ventas`         | Filtros y orden    |
-| DELETE | /ventas/{id}         | —                                          | 204, 404                                   | —                  |
-|        |                      |                                            |                                            |                    |
-| POST   | /mantenimientos      | `{tipo, Descripcion...}`                   | 201 (Location), 409 (conflicto), 422       | Regla unicidad     |
-| PUT    | /mantenimientos/{id} | `{...}` (parcial o completo)               | 200, 404, 409, 422 			                  | Validaciones       |
-| GET    | /mantenimientos/{id} | —                                          | 200, 404                                   | —                  |
-| GET    | /mantenimientos      | q, order, offset, limit                    | 200 (lista) + `Total-Count_mantenimientos` | Filtros y orden    |
-| DELETE | /mantenimientos/{id} | —                                          | 204, 404                                   | —                  |
-|        |                      |                                            |                                            |                    |
-| POST   | /articulos           | `{id, nombre...}`                          | 201 (Location), 409 (duplicado), 422       | Regla unicidad     |
-| PUT    | /articulos/{id}      | `{id, nombre...}`(parcial o completo)      | 200, 404, 409, 422 			                  | Validaciones       |
-| GET    | /articulos/{id}      | —                                          | 200, 404                                   | —                  |
-| GET    | /articulos           | q, order, offset, limit                    | 200 (lista) + `Total-Count_articulos`      | Filtros y orden    |
-| DELETE | /articulos/{id}      | —                                          | 204, 404                                   | —                  |
+| Método | Ruta                 | Query/Body                                       | Respuestas (códigos)                       |                                       Notas/Validaciones                                                  |
+|-------:|----------------------|--------------------------------------------------|--------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| POST   | /clientes            | {"id": "int", "nombre": "str"...} parcial o comp | 201 (Location), 409 (duplicado), 422       | Campos unicos: id  y nombre. El servidor devolverá un error 409 si nombre o id ya existe                  |
+| PUT    | /clientes/{id}       | {"id": "int", "nombre": "str"...}                | 200, 404, 409, 422 			                   | Revisión de tipo para los atributos a cambiar. Si falla, se devuelve un error 402                        |
+| GET    | /clientes/{id}       | —                                                | 200, 404                                   | Error 404 si el {id} no existe en db_clientes                                                             |
+| GET    | /clientes            | q, order, offset, limit                          | 200 (lista) + `Total-Count_clientes`       | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
+| DELETE | /clientes/{id}       | —                                                | 204, 404                                   | Si no tiene ordenes se elimina un Cliente que en futuros GETs retorna status 404                          |
+|        |                      |                                                  |                                            |                                                                                                           |
+| POST   | /ordenes             | {"tipo: "string",...,"id_cliente": "int"}        | 201 (Location), 422, 409 (conflicto)       | Unicidad. Requiere id_cliente en bd_cliente. Retorna 404 cuando un id_cliente no existe                   |
+| PUT    | /ordenes/{id}        | {"id": "int"}                                    | 200, 404, 422     			  | Requiere id_cedula existente en bd_cliente. Se devuelve un error 404 si no existe                                           |
+| GET    | /ordenes/{id}        | —                                                | 200, 404                                   | Error 404 si el {consecutivo_orden} no existe en db_orden                                                 |
+| GET    | /ordenes             | q, order, offset, limit                          | 200 (lista) + `Total-Count_ordenes`        | Filtros por q: (búsqueda por tipo), order(asc|desc), y paginación con offset y limit                      |
+| DELETE | /ordenes/{id}        | —                                                | 204, 404                                   | Solo se puede eliminar si el mantenimiento/venta está cerrado. Error 404 si no existe                     |
+|        |                      |                                                  |                                            |                                                                                                           |
+| POST   | /ventas              |{"consecutivo_orden": "int", "fecha": "datetime"  | 201 (Location), 422, 409 (conflicto)       | Unicidad. Requiere consecutivo en bd_orden. Retorna 404 cuando un si no existe en orden                   |
+| GET    | /ventas/{id}         | —                                                | 200, 404                                   | Requiere id_cedula existente en bd_venta. Se devuelve un error 404 si no existe                           |
+| GET    | /ventas              | q, order, offset, limit                          | 200 (lista) + `Total-Count_ventas`         | Filtros por q (búsqueda por articulo), order(asc|desc), y paginación con offset y limit                   |
+|        |                      |                                                  |                                            |                                                                                                           |
+| POST   | /mantenimientos      | {"consecutivo_orden": "int"..."existencia": "int"| 201 (Location), 409 (conflicto), 422       | Unicidad. Requiere consecutivo_orden en bd_orden. Retorna 404 cuando un consecutivo no existe             |
+| PUT    | /mantenimientos/{id} | {consecutivo_orden: "int"..."existencia": "int"  | 200, 404, 422 		         	                | Revisión de tipo para los atributos a cambiar y existencia de tecnico. Si falla, se devuelve un error 402 |
+| GET    | /mantenimientos/{id} | —                                                | 200, 404                                   | Error 404 si el {numero} no existe en db_venta                                                            |
+| GET    | /mantenimientos      | q, sort, order, offset, limit                    | 200 (lista) + `Total-Count_mantenimientos` | Filtros por q, sort (tipo|descripcion|tecnico), order(asc|desc), y paginación con offset y limit          |
+| DELETE | /mantenimientos/{id} | —                                                | 204, 404                                   | Solo se puede eliminar si el mantenimiento está cerrado. Error 404 si no existe                           |
+|        |                      |                                                  |                                            |                                                                                                           |
+| POST   | /articulos           | {"id"= "int", "nombre": "str"...} parcial o comp | 201 (Location), 409 (duplicado), 422       | Unicidad: id                                                                                              |
+| PUT    | /articulos/{id}      | {"id"= "int", "nombre": "str"...} parcial o comp | 200, 404, 422 		         	  | Revisión de tipo para los atributos a cambiar. Si falla, se devuelve un error 402                                       |
+| GET    | /articulos/{id}      | —                                                | 200, 404                                   | Error 404 si el {id} no existe en db_articulo                                                             |
+| GET    | /articulos           | q, order, offset, limit                          | 200 (lista) + `Total-Count_articulos`      | Filtros por q (búsqueda por nombre), order(asc|desc), y paginación con offset y limit                     |
+| DELETE | /articulos/{id}      | —                                                | 204, 404                                   | Si no hace parte de una venta se puede eliminar, error 404 si no existe en la bd_articulo                 |
