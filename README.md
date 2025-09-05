@@ -62,7 +62,7 @@ npm run dev
 ```
 
 ## MODELADO DE DATOS MRD
-
+```
   +----------------+             +-----------+
   |     Orden      |             |  Cliente  |
   | consecutivo PK |  n        1 | id PK     |
@@ -90,6 +90,7 @@ npm run dev
   | fecha           |        | id_articulo  PK  |1       | precio     |
   +-----------------+        +------------------+        | Existencia |
                                                          +------------+
+```
 
 ## TABLA DE API
 | Método | Ruta                 | Query/Body                                 | Respuestas (códigos)                       | Notas/Validaciones |
