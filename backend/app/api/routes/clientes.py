@@ -6,7 +6,7 @@ from app.api.routes.bases import db_cliente, db_orden
 router = APIRouter(prefix="", tags=["clientes"])
 
 # creacion de instacia de la clase CLIENTE
-@router.post("/cliente", response_model=Cliente, status_code=201)
+@router.post("/clientes", response_model=Cliente, status_code=201)
 def crear_cliente(payload: CrearCliente) -> Cliente:
     if payload.id in db_cliente:
         raise HTTPException(status_code=409, detail="CLIENTE ya existe en la BD")
@@ -15,12 +15,12 @@ def crear_cliente(payload: CrearCliente) -> Cliente:
     return cliente
     
 # listar todos los CLIENTES
-@router.get("/cliente", response_model=List[Cliente])
+@router.get("/clientes", response_model=List[Cliente])
 def list_clientes() -> List[Cliente]:
     return list(db_cliente.values())
 
 # listar todos los Clientes y sus ORDENES
-@router.get("/cliente/{cliente_id}/ordenes", response_model=List[Orden])
+@router.get("/clientes/{cliente_id}/ordenes", response_model=List[Orden])
 def get_ordenes_cliente(cliente_id: int) -> List[Orden]:
     cliente = db_cliente.get(cliente_id)
     if not cliente:
