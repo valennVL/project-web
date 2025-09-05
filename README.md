@@ -103,11 +103,11 @@ Usabilidad:
 Variables de entorno y puertos
 La configuración de variables de entorno es de suma importancia para la gestión de la configuración entre diferentes ambientes (desarrollo, producción).
 
-###Variables de Entorno:
+## Variables de Entorno:
 - Frontend (.env.development): VITE_API_URL=http://127.0.0.1:8000 para que el frontend sepa la URL a la que le debe hacer sus peticiones a la API.
 - Backend (.env o configuración del servidor): CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173 crea la lista las URLs del frontend que están permitidas para hacer peticiones.
 
-###Puertos:
+## Puertos:
 - Backend (FastAPI): Puerto 8000.
 - Frontend (React/Vite): Puerto 5173.
 
@@ -257,13 +257,13 @@ Detalle         |Numero_Venta       |Parte de la Clave Compuesta       |Obligato
 # creación de una instancia Cliente
 POST /cliente
 200 OK
-X-Total-Count: 42
+X-Total-Count: 1
 [
   { "id": 100100100,
     "nombre": "Pepito Perez",
-	  "email": "pepitoperez2000@mail.com",
-	  "contacto": 3012223344,
-	  "direccion": "Av. Colombia 1432"
+	"email": "pepitoperez2000@mail.com",
+	"contacto": 3012223344,
+	"direccion": "Av. Colombia 1432"
   }
 ]
 
