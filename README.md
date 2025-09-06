@@ -153,11 +153,13 @@ Estados locales con useState: El método más básico y fundamental que explica 
 ## Manejo de errores y patrones de respuesta
 
 **Manejo de errores:**
+
 	422 (Unprocessable Entity): Respuesta que se devuelve cuando los datos de una solicitud son inválidos o no cumplen con el formato esperado.
 	404 (Not Found): Para cuando se intenta acceder a un recurso que no existe en el servidor.
 	409 (Conflict): Para indicar que un recurso ya existe y no se puede volver a crear o incluso asociar.
 
-**Patrones de respuesta:**
+**Patrones de respuesta:*
+
 	200 OK: Para indicar las peticiones GET y PUT exitosas. Se retorna este código cuando se recupera un recurso o se actualiza de forma exitosa PUT. También se usa para listar recursos con GET
 	201 Created: Respuesta tras crear un nuevo recurso. Lo usaremos para la creación de una nueva orden POST de Orden o un nuevo Cliente.
 	204 No Content: Estado mostrado tras operaciones DELETE exitosa, indicando que la acción se completó con éxito. NO devuelve contenido de la entidad eliminada.
@@ -173,6 +175,13 @@ Estados locales con useState: El método más básico y fundamental que explica 
 
 ```
 
+## Tablero Kanban
+
+| To do | Doing                 | Done                        |
+|-------:|----------------------|-----------------------------------|
+| Logica de todas las entidades   | Implementacion logica entidad Cliente y Orden| Documentacion inicial del proyecto|
+|Depuracio backend| modelado Pydantic | Definición del modelo MER                     |
+| Finalizacion de la UI| Implementado algunas funcionalidades basicas          |   |
 
 
 ## Diagrama SPA
@@ -341,9 +350,7 @@ El endpoint base para acceder a la lista de ordenes es /ordenes.
 		200 OK: La solicitud se procesó correctamente y se devuelven los datos.
 		404 Not Found: El recurso solicitado no existe.
 		422 Bad Request: La solicitud contiene parámetros inválidos o incorrectos.
-		Encabezados (Headers): Es una convención común incluir un encabezado como X-Total-ordenes para informar al usuario el número total de registros de ordenes, sin importar la paginación.
-X-Total-ordenes: 133
-Cuerpo de la Respuesta (Body): El cuerpo de la respuesta es una matriz de objetos JSON, donde cada objeto representa una orden.
+		Encabezados (Headers): Es una convención común incluir un encabezado como X-Total-ordenes para informar al usuario el número total de registros de ordenes, sin importar la paginación. X-Total-ordenes: 133Cuerpo de la Respuesta (Body): El cuerpo de la respuesta es una matriz de objetos JSON, donde cada objeto representa una orden.
 
 ## Ejemplos JSON
 ```
