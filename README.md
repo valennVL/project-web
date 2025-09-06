@@ -176,6 +176,19 @@ Estados locales con useState: El método más básico y fundamental que explica 
 	201 Created: Respuesta tras crear un nuevo recurso. Lo usaremos para la creación de una nueva orden POST de Orden o un nuevo Cliente.
 	204 No Content: Estado mostrado tras operaciones DELETE exitosa, indicando que la acción se completó con éxito. NO devuelve contenido de la entidad eliminada.
 
+## ROUDMAP
+```
++-------------------+-------------------------------------------------------------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------------------------+---------------------------------------------------------------+
+|	Semanas       	|	              1 a 10	                                                                |	        11	                            |	                  12 a 15                                                                            	|	                  16	                                    | 
++-------------------+-------------------------------------------------------------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------------------------+---------------------------------------------------------------+
+|	Hitos         	|	Preparación para Entrega 2                                                              |	Entrega 2	                            |	Preparación para Final                                                                               	|	Entrega Final	                                            |
+|	Objetivos    	|	Elaboración de un frontend con las logicas de negocio en una etapa a nivel intermedio	|	Revisión y segunta entrega del proyecto	|	Acabado de detalles de GUI y la logica de Backend finalizada. Mejora del performance y responsividad	|	Entrega final del proyecto. Presentación del producto final |
++-------------------+-------------------------------------------------------------------------------------------+-------------------------------------------+-----------------------------------------------------------------------------------------------------------+---------------------------------------------------------------+
+
+```
+
+
+
 ## Diagrama SPA
 ```
 +----------------+       +----------------+       +-------------------+       +-----------------+
