@@ -112,20 +112,6 @@ La configuración de variables de entorno es de suma importancia para la gestió
 - Backend (FastAPI): Puerto 8000.
 - Frontend (React/Vite): Puerto 5173.
 
-## Instalacion **uv** (fast Python packaging)
-- Windows (PowerShell):
-```powershell
-powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"
-uv --version
-```
-- macOS/Linux:
-```bash
-curl -Ls https://astral.sh/uv/install.sh | sh
-# then restart your shell or:
-source ~/.cargo/env 2>/dev/null || true
-uv --version
-```
-
 
 ## Librerias Clave usadas
 **Backend (Python)**
@@ -228,35 +214,6 @@ Estados locales con useState: El método más básico y fundamental que explica 
         +------------------------+------------------------+-------------------+
 ```
 
-## Instrucciones para ejecutar backend_FastAPI (port 8000)
-
-```bash
-Paso 1. (dirigirse al directorio ded backend).
-cd backend
-
-Paso 2. (creacion y gestión de entorno virtual).
-uv venv .venv
-En PowerShell: .venv\Scripts\Activate
-# Para macOS/Linux:
-# source .venv/bin/activate
-
-Paso 3. Instalación de dependencias necesarias.
-uv pip install -r requirements.txt
-
-Paso 4. Ejecutar servicdor
-uv run uvicorn app.main:app --reload --port 8000
-
-Paso 5. Probar
-http://127.0.0.1:8000/docs
-```
-
-## Instrucciones para ejecutar Frontend — React (Vite, port 5173)
-```bash
-cd frontend
-npm install
-npm run dev
-# open http://localhost:5173
-```
 
 ## MODELADO DE DATOS MRD
 ```
@@ -439,4 +396,48 @@ X-Total-Count: 20
     "consecutivo_orden": 55   
   }
 ]
+```
+
+## Instalacion **uv** (fast Python packaging)
+- Windows (PowerShell):
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"
+uv --version
+```
+- macOS/Linux:
+```bash
+curl -Ls https://astral.sh/uv/install.sh | sh
+# then restart your shell or:
+source ~/.cargo/env 2>/dev/null || true
+uv --version
+```
+
+## Instrucciones para ejecutar backend_FastAPI (port 8000)
+
+```bash
+Paso 1. (dirigirse al directorio ded backend).
+cd backend
+
+Paso 2. (creacion y gestión de entorno virtual).
+uv venv .venv
+En PowerShell: .venv\Scripts\Activate
+# Para macOS/Linux:
+# source .venv/bin/activate
+
+Paso 3. Instalación de dependencias necesarias.
+uv pip install -r requirements.txt
+
+Paso 4. Ejecutar servicdor
+uv run uvicorn app.main:app --reload --port 8000
+
+Paso 5. Probar
+http://127.0.0.1:8000/docs
+```
+
+## Instrucciones para ejecutar Frontend — React (Vite, port 5173)
+```bash
+cd frontend
+npm install
+npm run dev
+# open http://localhost:5173
 ```
